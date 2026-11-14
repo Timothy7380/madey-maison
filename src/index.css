@@ -426,3 +426,16 @@ body.lock { overflow: hidden; }
 }
 
 @media (min-width: 961px) { .mobile-menu { display: none; } }
+
+/* Mobile / tablet portrait: hero title fills the full width and sits at the top */
+@media (max-width: 768px) and (orientation: portrait) {
+  .hero-content { justify-content: space-between; padding-top: 104px; }
+  .hero-title { font-size: calc((100vw - 40px) / 3.36); line-height: .9; letter-spacing: -0.035em; }
+  .hero-title .line.indent { text-align: right; }
+  .hero-title .amp { font-size: .8em; vertical-align: -0.08em; }
+  .hero-bottom { margin-top: 0; }
+}
+@media (max-width: 400px) and (orientation: portrait) {
+  .hero-title { font-size: calc((100vw - 32px) / 3.36); }
+  .hero-content { padding-top: 92px; }
+}
