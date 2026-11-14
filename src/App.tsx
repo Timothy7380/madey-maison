@@ -4,6 +4,9 @@ import Nav from './components/Nav'
 import Boutique from './components/Boutique'
 import CartDrawer from './components/CartDrawer'
 import EventsSection from './components/EventsSection'
+import AuthModal, { type AuthMode } from './components/AuthModal'
+import AccountDrawer from './components/AccountDrawer'
+import { useAuth } from './lib/auth'
 import { About, Arms, Faq, Footer, Hero, Statement } from './components/Sections'
 import { fetchProducts } from './lib/supabase'
 import { useReveal } from './lib/hooks'
@@ -17,6 +20,26 @@ export default function App() {
   const [cart, setCart] = useState<CartLine[]>([])
   const [bagOpen, setBagOpen] = useState(false)
   const [toast, setToast] = useState('')
+  const auth = useAuth()
+  const [authOpen, setAuthOpen] = useState(false)
+  const [authMode, setAuthMode] = useState<AuthMode>('signin')
+  const [authReason, setAuthReason] = useState('')
+  const [fromCheckout, setFromCheckout] = useState(false)
+  const [wantDetails, setWantDetails] = useState(0)
+  const [acctOpen, setAcctOpen] = useState(false)
+
+  const openAuth = (mode: AuthMode, reason = '', checkout = false) => {
+    setAuthMode(mode)
+    setAuthReason(reason)
+    setFromCheckout(checkout)
+    setAuthOpen(true)
+  }
+  const onAccount = () => (auth.user ? setAcctOpen(true) : openAuth('signin'))
+
+  // Arrived from a password-reset email → ask for a new password
+  useEffect(() => {
+    if (auth.recovering) openAuth('reset')
+  }, [auth.recovering])
 
   useEffect(() => {
     fetchProducts().then((p) => {
@@ -45,7 +68,7 @@ export default function App() {
   return (
     <div className={ready ? 'ready' : ''}>
       <Intro onDone={onIntroDone} />
-      <Nav count={count} onBag={() => setBagOpen(true)} onFilter={setFilter} />
+      <Nav count={count} onBag={() => setBagOpen(true)} onFilter={setFilter} onAccount={onAccount} />
       <main>
         <Hero />
         <About />
@@ -63,6 +86,28 @@ export default function App() {
         setQty={setQty}
         remove={remove}
         clear={() => setCart([])}
+        onNeedAuth={() => openAuth('signin', 'Sign in or create an account to place your order and track it later.', true)}
+        wantDetails={wantDetails}
+      />
+      <AuthModal
+        open={authOpen}
+        mode={authMode}
+        reason={authReason}
+        onClose={() => setAuthOpen(false)}
+        onSuccess={() => {
+          if (fromCheckout) {
+            setBagOpen(true)
+            setWantDetails((n) => n + 1)
+          }
+        }}
+      />
+      <AccountDrawer
+        open={acctOpen}
+        onClose={() => setAcctOpen(false)}
+        onShop={() => {
+          setAcctOpen(false)
+          document.getElementById('boutique')?.scrollIntoView({ behavior: 'smooth' })
+        }}
       />
       <div className={`toast ${toast ? 'on' : ''}`} role="status">
         {toast}

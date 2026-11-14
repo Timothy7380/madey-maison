@@ -49,24 +49,3 @@ export function buildOrder(lines: CartLine[], customer: OrderPayload['customer']
     has_preorder: items.some((i) => i.fulfilment === 'preorder'),
   }
 }
-
-export async function submitOrder(order: OrderPayload): Promise<{ ok: boolean; reference: string; error?: string }> {
-  const reference = 'MM-' + Date.now().toString(36).toUpperCase().slice(-6)
-  if (!supabase) {
-    await new Promise((r) => setTimeout(r, 700))
-    return { ok: true, reference }
-  }
-  const { error } = await supabase.from('orders').insert({
-    reference,
-    customer_name: order.customer.name,
-    customer_email: order.customer.email,
-    customer_phone: order.customer.phone,
-    delivery_address: order.customer.address,
-    notes: order.customer.notes,
-    items: order.items,
-    total: order.total,
-    has_preorder: order.has_preorder,
-    status: order.has_preorder ? 'pre-order' : 'pending',
-  })
-  return error ? { ok: false, reference, error: error.message } : { ok: true, reference }
-}

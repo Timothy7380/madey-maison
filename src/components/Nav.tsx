@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useAuth } from '../lib/auth'
 
 const LINKS = [
   ['Maison', '#maison'],
@@ -8,7 +9,19 @@ const LINKS = [
   ['FAQ', '#faq'],
 ]
 
-export default function Nav({ count, onBag, onFilter }: { count: number; onBag: () => void; onFilter: (f: string) => void }) {
+export default function Nav({
+  count,
+  onBag,
+  onFilter,
+  onAccount,
+}: {
+  count: number
+  onBag: () => void
+  onFilter: (f: string) => void
+  onAccount: () => void
+}) {
+  const { user } = useAuth()
+  const initials = user ? (user.full_name || user.email).split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase() : ''
   const [solid, setSolid] = useState(false)
   const [open, setOpen] = useState(false)
 
@@ -40,6 +53,22 @@ export default function Nav({ count, onBag, onFilter }: { count: number; onBag: 
             ))}
           </nav>
           <div style={{ display: 'flex', gap: 10 }}>
+            <button className="bag-btn acct-btn" onClick={onAccount} aria-label={user ? 'My account' : 'Sign in'}>
+              {user ? (
+                <>
+                  <span className="avatar">{initials}</span>
+                  <span className="bag-label">Account</span>
+                </>
+              ) : (
+                <>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <circle cx="12" cy="8" r="4" />
+                    <path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" />
+                  </svg>
+                  <span className="bag-label">Sign in</span>
+                </>
+              )}
+            </button>
             <button className="bag-btn" onClick={onBag} aria-label={`Bag, ${count} items`}>
               <span className="bag-label">Bag</span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -49,7 +78,11 @@ export default function Nav({ count, onBag, onFilter }: { count: number; onBag: 
               <span className="bag-count">{count}</span>
             </button>
             <button className="bag-btn menu-btn" onClick={() => setOpen(!open)} aria-label="Menu">
-              {open ? 'Close' : 'Menu'}
+              {open ? (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M6 6l12 12M18 6 6 18" /></svg>
+              ) : (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M4 8h16M4 16h16" /></svg>
+              )}
             </button>
           </div>
         </div>
@@ -60,6 +93,17 @@ export default function Nav({ count, onBag, onFilter }: { count: number; onBag: 
             {l}
           </a>
         ))}
+        <a
+          href="#"
+          onClick={(e) => {
+            e.preventDefault()
+            setOpen(false)
+            onAccount()
+          }}
+          style={{ color: 'var(--sand)' }}
+        >
+          {user ? 'My account' : 'Sign in'}
+        </a>
       </div>
     </>
   )

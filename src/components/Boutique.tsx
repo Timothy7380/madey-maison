@@ -37,7 +37,7 @@ export default function Boutique({
       <div className="wrap">
         <div className="section-head">
           <div>
-            <div className="eyebrow reveal" style={{ color: 'var(--bronze)' }}>
+            <div className="eyebrow reveal">
               The Boutique
             </div>
             <h2 className="display section-title reveal reveal-d1" style={{ marginTop: 20 }}>

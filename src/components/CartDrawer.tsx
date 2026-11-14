@@ -1,5 +1,6 @@
-import { useState } from 'react'
-import { buildOrder, fulfilmentFor, submitOrder } from '../lib/supabase'
+import { useEffect, useState } from 'react'
+import { buildOrder, fulfilmentFor } from '../lib/supabase'
+import { useAuth } from '../lib/auth'
 import { etaDate, naira } from '../lib/hooks'
 import type { CartLine, OrderPayload } from '../lib/types'
 
@@ -12,6 +13,8 @@ export default function CartDrawer({
   setQty,
   remove,
   clear,
+  onNeedAuth,
+  wantDetails,
 }: {
   open: boolean
   lines: CartLine[]
@@ -19,12 +22,41 @@ export default function CartDrawer({
   setQty: (id: string, q: number) => void
   remove: (id: string) => void
   clear: () => void
+  onNeedAuth: () => void
+  /** bumps after a successful sign-in from checkout, to jump to the details step */
+  wantDetails: number
 }) {
+  const auth = useAuth()
   const [step, setStep] = useState<Step>('bag')
   const [sending, setSending] = useState(false)
   const [err, setErr] = useState('')
   const [done, setDone] = useState<{ ref: string; order: OrderPayload } | null>(null)
   const [form, setForm] = useState({ name: '', email: '', phone: '', address: '', notes: '' })
+  const [remember, setRemember] = useState(true)
+
+  // Prefill delivery details from the signed-in customer's profile
+  useEffect(() => {
+    const u = auth.user
+    if (!u) return
+    setForm((f) => ({
+      ...f,
+      name: f.name || u.full_name,
+      email: u.email,
+      phone: f.phone || u.phone,
+      address: f.address || u.address,
+    }))
+  }, [auth.user])
+
+  useEffect(() => {
+    if (wantDetails && auth.user) setStep('details')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wantDetails])
+
+  useEffect(() => {
+    if (!auth.user && step === 'details') setStep('bag')
+  }, [auth.user, step])
+
+  const toDetails = () => (auth.user ? setStep('details') : onNeedAuth())
 
   const total = lines.reduce((s, l) => s + l.product.price * l.qty, 0)
   const hasPre = lines.some((l) => fulfilmentFor(l.product, l.qty).type === 'preorder')
@@ -39,7 +71,9 @@ export default function CartDrawer({
     setSending(true)
     setErr('')
     const order = buildOrder(lines, form)
-    const res = await submitOrder(order)
+    const res = await auth.placeOrder(order)
+    if (res.ok && remember && auth.user && (form.phone !== auth.user.phone || form.address !== auth.user.address || form.name !== auth.user.full_name))
+      await auth.updateProfile({ full_name: form.name, phone: form.phone, address: form.address })
     setSending(false)
     if (!res.ok) return setErr(res.error || 'Something went wrong. Please try again.')
     setDone({ ref: res.reference, order })
@@ -109,8 +143,8 @@ export default function CartDrawer({
                     : 'All items are in stock and ready to ship.'}{' '}
                   Delivery is confirmed with you after ordering.
                 </p>
-                <button className="btn btn-dark" style={{ width: '100%', justifyContent: 'center' }} onClick={() => setStep('details')}>
-                  Continue <span className="arrow">→</span>
+                <button className="btn btn-pill" style={{ width: '100%', justifyContent: 'center' }} onClick={toDetails}>
+                  {auth.user ? 'Continue' : 'Sign in to check out'} <span className="arrow">→</span>
                 </button>
               </div>
             )}
@@ -129,7 +163,7 @@ export default function CartDrawer({
               </label>
               <label className="field">
                 <span>Email</span>
-                <input required type="email" value={form.email} onChange={up('email')} autoComplete="email" />
+                <input required type="email" value={form.email} onChange={up('email')} autoComplete="email" readOnly />
               </label>
               <label className="field">
                 <span>Phone</span>
@@ -143,7 +177,11 @@ export default function CartDrawer({
                 <span>Notes (sizes, colours, anything else)</span>
                 <textarea rows={2} value={form.notes} onChange={up('notes')} />
               </label>
-              {err && <p style={{ color: '#a63e2d', marginTop: 16, fontSize: 14 }}>{err}</p>}
+              <label className="check">
+                <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} />
+                <span>Save these details to my account</span>
+              </label>
+              {err && <p className="form-err">{err}</p>}
             </div>
             <div className="drawer-foot">
               <div className="totals">
@@ -151,7 +189,7 @@ export default function CartDrawer({
                 <span>{naira(total)}</span>
               </div>
               <p className="foot-note">We'll confirm your order and payment details by email and phone.</p>
-              <button className="btn btn-dark" disabled={sending} style={{ width: '100%', justifyContent: 'center', opacity: sending ? 0.6 : 1 }}>
+              <button className="btn btn-pill" disabled={sending} style={{ width: '100%', justifyContent: 'center', opacity: sending ? 0.6 : 1 }}>
                 {sending ? 'Sending…' : 'Place order'}
               </button>
             </div>
@@ -165,7 +203,7 @@ export default function CartDrawer({
               <h4>Order {done.ref}</h4>
               <p>
                 Thank you, {done.order.customer.name.split(' ')[0]}. We've received your order and will contact you at{' '}
-                {done.order.customer.email} to confirm.
+                {done.order.customer.email} to confirm. Track it any time in My account.
               </p>
               <ul>
                 {done.order.items.map((i) => (

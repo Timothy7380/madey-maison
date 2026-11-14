@@ -14,7 +14,7 @@ export default function EventsSection() {
       <div className="wrap">
         <div className="section-head">
           <div>
-            <div className="eyebrow reveal" style={{ color: 'var(--sand)' }}>
+            <div className="eyebrow reveal">
               03 · Service
             </div>
             <h2 className="display section-title reveal reveal-d1" style={{ marginTop: 20 }}>

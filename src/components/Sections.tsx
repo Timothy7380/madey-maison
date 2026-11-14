@@ -24,10 +24,10 @@ export function Hero() {
           </p>
           <div className="hero-meta">
             <div>
-              Established<b>2015</b>
+              <b>2015</b>Established
             </div>
             <div>
-              Houses<b>Three</b>
+              <b>03</b>Houses under one name
             </div>
             <a href="#boutique" className="btn btn-ghost-light" style={{ alignSelf: 'center' }}>
               Shop the boutique <span className="arrow">→</span>
@@ -44,7 +44,7 @@ export function About() {
     <section className="section" id="maison">
       <div className="wrap about-grid">
         <div>
-          <div className="eyebrow reveal" style={{ color: 'var(--bronze)' }}>
+          <div className="eyebrow reveal">
             The Maison
           </div>
           <p className="about-lead reveal reveal-d1" style={{ marginTop: 28 }}>
@@ -91,7 +91,7 @@ export function Arms({ onFilter }: { onFilter: (f: string) => void }) {
       <div className="wrap">
         <div className="section-head">
           <div>
-            <div className="eyebrow reveal" style={{ color: 'var(--sand)' }}>
+            <div className="eyebrow reveal">
               Three houses
             </div>
             <h2 className="display section-title reveal reveal-d1" style={{ marginTop: 20 }}>
@@ -160,7 +160,7 @@ export function Faq() {
     <section className="section" id="faq">
       <div className="wrap faq-grid">
         <div>
-          <div className="eyebrow reveal" style={{ color: 'var(--bronze)' }}>
+          <div className="eyebrow reveal">
             Good to know
           </div>
           <h2 className="display section-title reveal reveal-d1" style={{ marginTop: 20 }}>
