@@ -143,7 +143,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         password,
         options: { data: { full_name: fullName }, emailRedirectTo: window.location.origin + window.location.pathname },
       })
-      if (error) return { ok: false, error: error.message }
+      if (error) {
+        const emailIssue = /email|smtp|not authorized|rate limit/i.test(error.message) && !/already/i.test(error.message)
+        return {
+          ok: false,
+          error: emailIssue
+            ? "We couldn't send your confirmation email just now. Please try again later."
+            : error.message,
+        }
+      }
       if (!data.session) return { ok: true, message: 'Check your inbox to confirm your email, then sign in.' }
       return { ok: true }
     },
@@ -178,6 +186,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: window.location.origin + window.location.pathname,
       })
+      if (error && /email|smtp|not authorized|rate limit/i.test(error.message))
+        return { ok: false, error: "We couldn't send the reset email just now. Please try again later." }
       return error ? { ok: false, error: error.message } : { ok: true, message: 'If an account exists, a reset link is on its way to your inbox.' }
     },
 
