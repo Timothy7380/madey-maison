@@ -293,7 +293,7 @@ body.lock { overflow: hidden; }
 .auth-art { position: relative; background: var(--ink); color: var(--cream); min-height: 560px; }
 .auth-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .7; }
 .auth-art-copy { position: absolute; left: 32px; right: 32px; bottom: 32px; }
-.auth-art-copy p { margin-top: 14px; font-family: var(--display); font-size: 22px; font-weight: 300; line-height: 1.3; }
+.auth-art-copy p { margin-top: 0; font-family: var(--display); font-size: 22px; font-weight: 300; line-height: 1.3; }
 .auth-form { position: relative; padding: 48px 44px 36px; overflow-y: auto; display: flex; flex-direction: column; }
 .auth-close { position: absolute; top: 20px; right: 22px; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); }
 .auth-close:hover { background: var(--ink); color: var(--cream); }

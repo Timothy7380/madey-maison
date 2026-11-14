@@ -86,9 +86,6 @@ export default function AuthModal({
         <div className="auth-art">
           <img src={img('1558769132-cb1aea458c5e')} alt="" />
           <div className="auth-art-copy">
-            <span className="logo">
-              MADEY <span>MAISON</span>
-            </span>
             <p>Track your orders, see pre-order dates and check out faster with saved details.</p>
           </div>
         </div>
