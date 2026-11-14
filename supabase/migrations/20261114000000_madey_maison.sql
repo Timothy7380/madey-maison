@@ -1,5 +1,4 @@
 -- Madey Maison: boutique products + online orders
-create extension if not exists "pgcrypto";
 
 create table if not exists public.products (
   id            uuid primary key default gen_random_uuid(),
@@ -48,11 +47,11 @@ create policy "Public insert orders" on public.orders
 
 -- Seed catalogue
 insert into public.products (name, arm, category, description, price, image_url, stock_qty, ship_days, preorder_days, display_order) values
- ('Atelier Silk Trouser','fashion','Trousers','Fluid silk-blend trouser with a gathered cuff.',185000,'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=900&q=80',6,3,14,1),
- ('Maison Satin Bomber','fashion','Outerwear','Liquid satin bomber in burnt copper.',320000,'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=900&q=80',0,3,21,2),
- ('Panier Woven Bag','fashion','Accessories','Hand-woven body with leather trim.',145000,'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=900&q=80',12,2,10,3),
- ('Rive Gauche Pump','fashion','Shoes','Pointed-toe pump in soft ivory nappa.',98000,'https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=900&q=80',0,3,18,4),
- ('Lumière Wing Chair','interiors','Seating','Soft wool upholstery on a solid oak frame.',540000,'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&w=900&q=80',2,5,30,5),
- ('Terre Ceramic Vessel','interiors','Objects','Hand-thrown stoneware, matte glaze.',42000,'https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=900&q=80',20,2,12,6),
- ('Salon Velvet Sofa','interiors','Seating','Deep-seat three-seater in emerald velvet.',1250000,'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=900&q=80',0,7,45,7),
- ('Blanc Boudoir Chair','interiors','Seating','Button-tufted slipper chair in ivory.',186000,'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=900&q=80',8,3,14,8);
+ ('Atelier Silk Trouser','fashion','Trousers','Fluid silk-blend trouser with a gathered cuff.',185000,'images/1594633312681-425c7b97ccd1.jpg',6,3,14,1),
+ ('Maison Satin Bomber','fashion','Outerwear','Liquid satin bomber in burnt copper.',320000,'images/1591047139829-d91aecb6caea.jpg',0,3,21,2),
+ ('Panier Woven Bag','fashion','Accessories','Hand-woven body with leather trim.',145000,'images/1590874103328-eac38a683ce7.jpg',12,2,10,3),
+ ('Rive Gauche Pump','fashion','Shoes','Pointed-toe pump in soft ivory nappa.',98000,'images/1535043934128-cf0b28d52f95.jpg',0,3,18,4),
+ ('Lumière Wing Chair','interiors','Seating','Soft wool upholstery on a solid oak frame.',540000,'images/1598300042247-d088f8ab3a91.jpg',2,5,30,5),
+ ('Terre Ceramic Vessel','interiors','Objects','Hand-thrown stoneware, matte glaze.',42000,'images/1612196808214-b8e1d6145a8c.jpg',20,2,12,6),
+ ('Salon Velvet Sofa','interiors','Seating','Deep-seat three-seater in emerald velvet.',1250000,'images/1555041469-a586c61ea9bc.jpg',0,7,45,7),
+ ('Blanc Boudoir Chair','interiors','Seating','Button-tufted slipper chair in ivory.',186000,'images/1567538096630-e0c55bd6374c.jpg',8,3,14,8);
