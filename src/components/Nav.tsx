@@ -32,6 +32,13 @@ export default function Nav({
     return () => window.removeEventListener('scroll', on)
   }, [])
 
+  useEffect(() => {
+    document.body.classList.toggle('lock', open)
+    const onResize = () => window.innerWidth > 960 && setOpen(false)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [open])
+
   const click = (label: string) => {
     if (label === 'Fashion') onFilter('fashion')
     if (label === 'Interiors') onFilter('interiors')
@@ -40,7 +47,7 @@ export default function Nav({
 
   return (
     <>
-      <header className={`nav ${solid ? 'solid' : ''}`}>
+      <header className={`nav ${solid ? 'solid' : ''} ${open ? 'menu-open' : ''}`}>
         <div className="wrap nav-inner">
           <a href="#top" className="logo">
             MADEY <span>MAISON</span>

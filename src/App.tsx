@@ -68,7 +68,7 @@ export default function App() {
   return (
     <div className={ready ? 'ready' : ''}>
       <Intro onDone={onIntroDone} />
-      <Nav count={count} onBag={() => setBagOpen(true)} onFilter={setFilter} onAccount={onAccount} />
+      <Nav count={count} onBag={() => { setToast(''); setBagOpen(true) }} onFilter={setFilter} onAccount={onAccount} />
       <main>
         <Hero />
         <About />
