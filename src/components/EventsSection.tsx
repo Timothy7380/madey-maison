@@ -15,7 +15,7 @@ export default function EventsSection() {
         <div className="section-head">
           <div>
             <div className="eyebrow reveal">
-              03 · Service
+              Service
             </div>
             <h2 className="display section-title reveal reveal-d1" style={{ marginTop: 20 }}>
               Madey <span className="script">Events</span>

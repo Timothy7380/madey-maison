@@ -112,7 +112,6 @@ export function Arms({ onFilter }: { onFilter: (f: string) => void }) {
               onClick={() => a.filter && onFilter(a.filter)}
             >
               <img src={img(a.image, 1000)} alt={a.name} />
-              <span className="arm-no">{a.no}</span>
               <span className="arm-tag">{a.tag}</span>
               <div className="arm-body">
                 <div className="arm-name">

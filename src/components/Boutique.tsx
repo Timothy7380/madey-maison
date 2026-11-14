@@ -98,8 +98,7 @@ export default function Boutique({
             ['03', 'Not in stock? Pre-order', 'We make or source it for you, and tell you exactly how many days it takes.'],
           ].map(([n, t, d], i) => (
             <div key={n} className={`reveal reveal-d${i + 1}`}>
-              <span className="n">{n}</span>
-              <h4>{t}</h4>
+              <h4 style={{ marginTop: 0 }}>{t}</h4>
               <p>{d}</p>
             </div>
           ))}

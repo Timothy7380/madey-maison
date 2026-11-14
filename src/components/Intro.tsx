@@ -40,7 +40,6 @@ export default function Intro({ onDone }: { onDone: () => void }) {
           ),
         )}
       </div>
-      <div className="intro-sub">Maison · Est. 2015</div>
     </div>
   )
 }
